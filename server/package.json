@@ -14,6 +14,11 @@
   },
   "dependencies": {
     "@cube-coach/cube-engine": "*",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.20.2",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -22,19 +27,14 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.1",
+    "typescript": "^5.6.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^22.20.2",
     "@types/supertest": "^6.0.2",
     "mongodb-memory-server": "^10.1.2",
     "supertest": "^7.0.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
     "vitest": "^2.1.4"
   }
 }
