@@ -8,6 +8,7 @@
 import { applyMoves, isSolved, validateCube, type FaceletCube, type Move } from "@cube-coach/cube-engine";
 import { faceletToCubie } from "../cube/conversions.js";
 import { simplifyMoves } from "../parser/simplify.js";
+import { clock } from "./clock.js";
 import { solvePhase1 } from "./phase1.js";
 import { solvePhase2 } from "./phase2.js";
 
@@ -31,7 +32,7 @@ export type SolveResult =
     };
 
 export function solve(cube: FaceletCube): SolveResult {
-  const start = performance.now();
+  const start = clock.now();
 
   const validation = validateCube(cube);
   if (!validation.valid) {
@@ -41,12 +42,12 @@ export function solve(cube: FaceletCube): SolveResult {
         code: "INVALID_CUBE",
         message: "The cube configuration is impossible: " + validation.issues.map((i) => i.message).join(" "),
       },
-      searchTimeMs: performance.now() - start,
+      searchTimeMs: clock.now() - start,
     };
   }
 
   if (isSolved(cube)) {
-    return { success: true, moves: [], moveCount: 0, verified: true, searchTimeMs: performance.now() - start };
+    return { success: true, moves: [], moveCount: 0, verified: true, searchTimeMs: clock.now() - start };
   }
 
   const cubie = faceletToCubie(cube);
@@ -56,7 +57,7 @@ export function solve(cube: FaceletCube): SolveResult {
     return {
       success: false,
       error: { code: "SOLVER_FAILED", message: "Phase 1 search failed to reach the required subgroup." },
-      searchTimeMs: performance.now() - start,
+      searchTimeMs: clock.now() - start,
     };
   }
 
@@ -65,7 +66,7 @@ export function solve(cube: FaceletCube): SolveResult {
     return {
       success: false,
       error: { code: "SOLVER_FAILED", message: "Phase 2 search failed to finish the cube." },
-      searchTimeMs: performance.now() - start,
+      searchTimeMs: clock.now() - start,
     };
   }
 
@@ -84,7 +85,7 @@ export function solve(cube: FaceletCube): SolveResult {
         code: "SOLVER_FAILED",
         message: "The search produced a candidate solution that failed independent verification.",
       },
-      searchTimeMs: performance.now() - start,
+      searchTimeMs: clock.now() - start,
     };
   }
 
@@ -93,6 +94,6 @@ export function solve(cube: FaceletCube): SolveResult {
     moves: simplified,
     moveCount: simplified.length,
     verified: true,
-    searchTimeMs: performance.now() - start,
+    searchTimeMs: clock.now() - start,
   };
 }
