@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Semantic theme variables. Every page relies on light (slate-100/200/400) text
+ * classes that assume a dark page background -- but nothing was ever setting that
+ * background at the root level, so any page that didn't locally repeat its own
+ * `bg-slate-950` (most of them) fell back to the browser's default white, making
+ * that light text nearly invisible. Setting it once here, globally, fixes every
+ * page consistently instead of patching each one's top-level container.
+ */
+:root {
+  --background: #0b1120;
+  --surface: #111827;
+  --surface-elevated: #151d2e;
+  --border: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-disabled: #64748b;
+  --accent: #38bdf8;
+  --accent-hover: #0ea5e9;
+}
+
+html {
+  background-color: var(--background);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--text-secondary);
+}
+
+#root {
+  min-height: 100vh;
+}
