@@ -9,8 +9,7 @@ import { toFaceletCube } from "./cubeInput.js";
 import { useCubeInput } from "./useCubeInput.js";
 import { useSolver } from "./useSolver.js";
 
-const secondaryButtonClass =
-  "rounded-md border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-100 transition-colors hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-slate-800";
+const secondaryButtonClass = "cc-btn-secondary px-3 py-1.5";
 
 export function CubeInputView() {
   const input = useCubeInput();
@@ -41,7 +40,7 @@ export function CubeInputView() {
             </p>
           </div>
 
-          <div className="flex justify-center rounded-lg border border-slate-800 bg-slate-900 p-4">
+          <div className="cc-card flex justify-center p-4">
             <CubeNet facelets={input.facelets} onPaint={input.paintSticker} />
           </div>
 
@@ -61,14 +60,14 @@ export function CubeInputView() {
 
           {/* Once there's an interactive solution, its own 3D player replaces this plain preview. */}
           {input.complete && !hasInteractiveSolution && (
-            <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900" style={{ height: 260 }}>
+            <div className="cc-card overflow-hidden" style={{ height: 260 }}>
               <Cube3D cube={toFaceletCube(input.facelets)} />
             </div>
           )}
         </div>
 
         <div className="flex w-full flex-col gap-4 lg:w-96">
-          <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+          <div className="cc-card p-4">
             <ValidationPanel
               filledCount={input.filledCount}
               totalEditable={input.totalEditable}
@@ -84,7 +83,7 @@ export function CubeInputView() {
       </div>
 
       {solver.state.status === "success" && solver.state.result.moveCount > 0 && (
-        <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+        <div className="cc-card p-4">
           <SolutionViewer originalCube={toFaceletCube(input.facelets)} result={solver.state.result} />
         </div>
       )}

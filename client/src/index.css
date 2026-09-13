@@ -3,36 +3,264 @@
 @tailwind utilities;
 
 /*
- * Semantic theme variables. Every page relies on light (slate-100/200/400) text
- * classes that assume a dark page background -- but nothing was ever setting that
- * background at the root level, so any page that didn't locally repeat its own
- * `bg-slate-950` (most of them) fell back to the browser's default white, making
- * that light text nearly invisible. Setting it once here, globally, fixes every
- * page consistently instead of patching each one's top-level container.
+ * CubeCoach design system. Semantic tokens + a small set of reusable component
+ * classes (glass cards, buttons, inputs, badges) so every page shares one visual
+ * language instead of each page hand-rolling its own bg-slate-900/border-slate-800
+ * combination. Tailwind utility classes are still used everywhere for layout and
+ * spacing -- these classes only standardize the "look" (surface, border, glow).
  */
 :root {
-  --background: #0b1120;
-  --surface: #111827;
-  --surface-elevated: #151d2e;
-  --border: #1e293b;
+  --background: #080b14;
+  --background-secondary: #0d1220;
+  --surface: rgba(17, 24, 39, 0.78);
+  --surface-solid: #111827;
+  --surface-elevated: #172033;
+  --border: rgba(148, 163, 184, 0.14);
+  --border-strong: rgba(148, 163, 184, 0.28);
   --text-primary: #f8fafc;
-  --text-secondary: #e2e8f0;
+  --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
   --text-disabled: #64748b;
   --accent: #38bdf8;
   --accent-hover: #0ea5e9;
+  --accent-purple: #8b5cf6;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
 html {
   background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(139, 92, 246, 0.08), transparent);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 body {
   min-height: 100vh;
-  background-color: var(--background);
   color: var(--text-secondary);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 #root {
+  display: flex;
   min-height: 100vh;
+  flex-direction: column;
+}
+
+/* Polished scrollbar (WebKit + Firefox) */
+* {
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.28);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.45);
+  background-clip: padding-box;
+}
+
+::selection {
+  background-color: rgba(56, 189, 248, 0.32);
+  color: var(--text-primary);
+}
+
+/* A visible, on-brand ring for keyboard focus wherever a component doesn't
+   already set its own focus-visible treatment. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@keyframes cc-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /* Page-level entrance: applied once to a page's top-level container. */
+  .cc-page {
+    animation: cc-fade-in-up 0.4s ease-out both;
+  }
+
+  /* The primary "card" look used across algorithm cards, stat tiles, panels. */
+  .cc-card {
+    @apply rounded-2xl border shadow-lg shadow-black/20 backdrop-blur-md;
+    background-color: var(--surface);
+    border-color: var(--border);
+  }
+
+  .cc-card-interactive {
+    @apply cc-card transition-all duration-200;
+  }
+
+  .cc-card-interactive:hover {
+    border-color: var(--border-strong);
+    box-shadow:
+      0 12px 32px -12px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(56, 189, 248, 0.12);
+    transform: translateY(-2px);
+  }
+
+  /* A solid (non-blurred) surface for content nested inside another glass card,
+     or for small dense elements where a second blur layer would look muddy. */
+  .cc-surface {
+    @apply rounded-xl border;
+    background-color: var(--surface-solid);
+    border-color: var(--border);
+  }
+
+  .cc-surface-elevated {
+    @apply rounded-xl border;
+    background-color: var(--surface-elevated);
+    border-color: var(--border-strong);
+  }
+
+  .cc-heading-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 55%, var(--accent-purple) 100%);
+  }
+
+  .cc-label {
+    @apply text-xs font-semibold uppercase tracking-wider;
+    color: var(--text-muted);
+  }
+
+  .cc-badge {
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium;
+    background-color: var(--surface-elevated);
+    border-color: var(--border-strong);
+    color: var(--text-secondary);
+  }
+
+  /* Buttons. Layout (padding/size) stays with each usage via extra utility
+     classes; these define color, motion, and the shared glow-on-hover feel. */
+  .cc-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .cc-btn-primary {
+    @apply cc-btn text-slate-950;
+    background-image: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    box-shadow: 0 4px 20px -4px rgba(56, 189, 248, 0.45);
+  }
+
+  .cc-btn-primary:hover:not(:disabled) {
+    box-shadow: 0 6px 28px -4px rgba(56, 189, 248, 0.65);
+    transform: translateY(-1px);
+  }
+
+  .cc-btn-secondary {
+    @apply cc-btn border;
+    background-color: var(--surface);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+
+  .cc-btn-secondary:hover:not(:disabled) {
+    border-color: var(--accent);
+    background-color: var(--surface-elevated);
+  }
+
+  .cc-btn-ghost {
+    @apply cc-btn;
+    color: var(--text-secondary);
+  }
+
+  .cc-btn-ghost:hover:not(:disabled) {
+    color: var(--text-primary);
+    background-color: var(--surface);
+  }
+
+  .cc-btn-danger {
+    @apply cc-btn border text-red-300;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.4);
+  }
+
+  .cc-btn-danger:hover:not(:disabled) {
+    background-color: rgba(239, 68, 68, 0.18);
+    border-color: var(--danger);
+  }
+
+  /* A single consistent shape for every "loading" / "error" / "empty" message in the
+     app, instead of each page rendering a bare, differently-worded <p>. */
+  .cc-status-line {
+    @apply flex items-center gap-2 text-sm;
+    color: var(--text-muted);
+  }
+
+  .cc-status-error {
+    @apply cc-surface flex items-start gap-2 p-3 text-sm;
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+  }
+
+  .cc-spin {
+    animation: cc-spin 0.8s linear infinite;
+  }
+
+  @keyframes cc-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Form inputs. */
+  .cc-input {
+    @apply w-full rounded-lg border px-3 py-2 text-sm transition-colors duration-150;
+    background-color: var(--surface-solid);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+
+  .cc-input::placeholder {
+    color: var(--text-disabled);
+  }
+
+  .cc-input:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+  }
+
+  .cc-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }

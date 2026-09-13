@@ -11,7 +11,7 @@ const PENALTY_LABEL: Record<SolveRecord["penalty"], string> = { NONE: "—", PLU
 
 export function SolveHistory({ solves, onDelete }: SolveHistoryProps) {
   if (solves.length === 0) {
-    return <p className="text-sm text-slate-400">No solves yet -- your first solve will appear here.</p>;
+    return <p className="cc-status-line">No solves yet -- your first solve will appear here.</p>;
   }
 
   return (

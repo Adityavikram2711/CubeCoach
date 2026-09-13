@@ -48,15 +48,15 @@ export function SessionSummaryView({ state, casesById, onPracticeAgain, onTrainW
       )}
 
       <div className="flex flex-wrap gap-2">
-        <button type="button" onClick={onPracticeAgain} className="rounded-md bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-sky-400">
+        <button type="button" onClick={onPracticeAgain} className="cc-btn-primary">
           Practice Again
         </button>
         {summary.weakCases.length > 0 && (
-          <button type="button" onClick={onTrainWeakCases} className="rounded-md border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 hover:border-slate-500">
+          <button type="button" onClick={onTrainWeakCases} className="cc-btn-secondary">
             Train Weak Cases
           </button>
         )}
-        <button type="button" onClick={onBackToTrainer} className="rounded-md border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 hover:border-slate-500">
+        <button type="button" onClick={onBackToTrainer} className="cc-btn-secondary">
           Back to Trainer
         </button>
       </div>
@@ -66,7 +66,7 @@ export function SessionSummaryView({ state, casesById, onPracticeAgain, onTrainW
 
 function SummaryStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900 p-4 text-center">
+    <div className="cc-card p-4 text-center">
       <div className="text-xl font-bold text-slate-100">{value}</div>
       <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
     </div>

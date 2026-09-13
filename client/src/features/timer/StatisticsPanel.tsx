@@ -29,7 +29,7 @@ export function StatisticsPanel({ stats }: StatisticsPanelProps) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900 p-3 text-center">
+    <div className="cc-card p-3 text-center">
       <div className="font-mono text-lg font-bold text-slate-100">{value}</div>
       <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
     </div>

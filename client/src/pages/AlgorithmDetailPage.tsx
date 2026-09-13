@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { AlgorithmPlaybackViewer } from "../features/algorithms/AlgorithmPlaybackViewer.js";
 import { useAlgorithm } from "../features/algorithms/useAlgorithms.js";
@@ -10,27 +11,31 @@ export function AlgorithmDetailPage() {
   const isAuthenticated = useAuthStore((s) => s.status === "authenticated");
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6 p-6">
+    <div className="cc-page mx-auto flex max-w-3xl flex-col gap-6 p-6">
       <Link to="/algorithms" className="text-sm text-sky-400 hover:underline">
         &larr; Back to Algorithm Library
       </Link>
 
-      {isLoading && <p className="text-sm text-slate-400">Loading case...</p>}
-      {isError && <p className="text-sm text-rose-400">Failed to load case: {(error as Error).message}</p>}
+      {isLoading && (
+        <p className="cc-status-line">
+          <Loader2 size={14} className="cc-spin" /> Loading case...
+        </p>
+      )}
+      {isError && <p className="cc-status-error">Failed to load case: {(error as Error).message}</p>}
 
       {algorithmCase && (
         <>
           <div>
             <div className="flex items-center gap-2">
-              <span className="rounded-full border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-300">
+              <span className="cc-badge">
                 {algorithmCase.type}
               </span>
               {algorithmCase.category && (
-                <span className="rounded-full border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-300">
+                <span className="cc-badge">
                   {algorithmCase.category}
                 </span>
               )}
-              <span className="rounded-full border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-300">
+              <span className="cc-badge">
                 {algorithmCase.difficulty}
               </span>
             </div>
@@ -64,7 +69,7 @@ export function AlgorithmDetailPage() {
           {isAuthenticated ? (
             <PersonalizationPanel algorithmId={algorithmCase.caseId} officialAlgorithm={algorithmCase.algorithm} />
           ) : (
-            <p className="rounded-md border border-slate-800 bg-slate-900 p-3 text-sm text-slate-400">
+            <p className="cc-surface p-3 text-sm text-slate-400">
               <Link to="/login" className="text-sky-400 hover:underline">
                 Log in
               </Link>{" "}

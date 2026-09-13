@@ -12,7 +12,7 @@ export function NotationHelp({ bases }: NotationHelpProps) {
   const legend: Array<{ move: Move; explanation: string }> = notationLegend(bases);
 
   return (
-    <div className="rounded-md border border-slate-800">
+    <div className="cc-surface">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -23,7 +23,7 @@ export function NotationHelp({ bases }: NotationHelpProps) {
         <ChevronDown size={16} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <dl className="grid grid-cols-1 gap-x-4 gap-y-1 border-t border-slate-800 p-3 text-sm sm:grid-cols-2">
+        <dl className="grid grid-cols-1 gap-x-4 gap-y-1 border-t p-3 text-sm sm:grid-cols-2" style={{ borderColor: "var(--border)" }}>
           {legend.map(({ move, explanation }) => (
             <div key={move} className="flex gap-2">
               <dt className="w-12 shrink-0 font-mono font-semibold text-slate-200">{move}</dt>

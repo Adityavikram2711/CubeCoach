@@ -3,6 +3,7 @@
  * filter, backed by GET /api/algorithms. Category filtering happens client-side across
  * the currently-loaded tab's results, since the category vocabulary differs per type.
  */
+import { Loader2, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { AlgorithmType, Difficulty } from "../api/algorithms.js";
 import { AlgorithmCard } from "../features/algorithms/AlgorithmCard.js";
@@ -10,6 +11,8 @@ import { useAlgorithms } from "../features/algorithms/useAlgorithms.js";
 
 const TABS: AlgorithmType[] = ["OLL", "PLL", "F2L"];
 const DIFFICULTIES: Difficulty[] = ["Beginner", "Intermediate", "Advanced"];
+const CASE_COUNTS: Record<AlgorithmType, number> = { OLL: 57, PLL: 21, F2L: 24 };
+const TOTAL_CASES = CASE_COUNTS.OLL + CASE_COUNTS.PLL + CASE_COUNTS.F2L;
 
 export function AlgorithmsPage() {
   const [tab, setTab] = useState<AlgorithmType>("OLL");
@@ -35,13 +38,23 @@ export function AlgorithmsPage() {
   );
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6 p-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-100">Algorithm Library</h1>
-        <p className="text-sm text-slate-400">57 OLL, 21 PLL, and 24 F2L cases -- every algorithm independently verified against the cube engine.</p>
+    <div className="cc-page mx-auto flex max-w-6xl flex-col gap-6 p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-100 sm:text-3xl">Algorithm Library</h1>
+          <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+            Master OLL, PLL, and F2L algorithms with verified algorithms and recognition guidance.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <StatPill value={TOTAL_CASES} label="Total" accent />
+          <StatPill value={CASE_COUNTS.OLL} label="OLL" />
+          <StatPill value={CASE_COUNTS.PLL} label="PLL" />
+          <StatPill value={CASE_COUNTS.F2L} label="F2L" />
+        </div>
       </div>
 
-      <div className="flex gap-2 border-b border-slate-800">
+      <div className="flex gap-2 border-b" style={{ borderColor: "var(--border)" }}>
         {TABS.map((t) => (
           <button
             key={t}
@@ -52,66 +65,85 @@ export function AlgorithmsPage() {
             }}
             aria-current={tab === t ? "page" : undefined}
             className={`px-4 py-2 text-sm font-semibold transition-colors ${
-              tab === t ? "border-b-2 border-sky-400 text-sky-300" : "text-slate-400 hover:text-slate-200"
+              tab === t ? "border-b-2 text-sky-300" : "hover:text-slate-200"
             }`}
+            style={{ borderColor: tab === t ? "var(--accent)" : "transparent", color: tab === t ? undefined : "var(--text-muted)" }}
           >
             {t}
           </button>
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by name or recognition..."
-          aria-label="Search algorithms"
-          className="min-w-[220px] flex-1 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500"
-        />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-[3]">
+          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--text-disabled)" }} />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search algorithms..."
+            aria-label="Search algorithms"
+            className="cc-input pl-9"
+          />
+        </div>
 
-        <select
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value as Difficulty | "")}
-          aria-label="Filter by difficulty"
-          className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100"
-        >
-          <option value="">All difficulties</option>
-          {DIFFICULTIES.map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
-
-        {categories.length > 0 && (
+        <div className="flex gap-3">
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            aria-label="Filter by category"
-            className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value as Difficulty | "")}
+            aria-label="Filter by difficulty"
+            className="cc-input flex-1 sm:w-44"
           >
-            <option value="">All categories</option>
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            <option value="">All difficulties</option>
+            {DIFFICULTIES.map((d) => (
+              <option key={d} value={d}>
+                {d}
               </option>
             ))}
           </select>
-        )}
+
+          {categories.length > 0 && (
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              aria-label="Filter by category"
+              className="cc-input flex-1 sm:w-44"
+            >
+              <option value="">All categories</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </div>
 
-      {isLoading && <p className="text-sm text-slate-400">Loading cases...</p>}
-      {isError && <p className="text-sm text-rose-400">Failed to load algorithms: {(error as Error).message}</p>}
-      {!isLoading && !isError && visibleCases.length === 0 && (
-        <p className="text-sm text-slate-400">No cases match your filters.</p>
+      {isLoading && (
+        <p className="cc-status-line">
+          <Loader2 size={14} className="cc-spin" /> Loading cases...
+        </p>
       )}
+      {isError && <p className="cc-status-error">Failed to load algorithms: {(error as Error).message}</p>}
+      {!isLoading && !isError && visibleCases.length === 0 && <p className="cc-status-line">No cases match your filters.</p>}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visibleCases.map((c) => (
           <AlgorithmCard key={c.caseId} algorithmCase={c} />
         ))}
       </div>
+    </div>
+  );
+}
+
+function StatPill({ value, label, accent }: { value: number; label: string; accent?: boolean }) {
+  return (
+    <div className="cc-surface flex min-w-[64px] flex-col items-center px-3 py-1.5">
+      <span className="text-sm font-bold tabular-nums" style={{ color: accent ? "var(--accent)" : "var(--text-primary)" }}>
+        {value}
+      </span>
+      <span className="cc-label text-[10px]">{label}</span>
     </div>
   );
 }

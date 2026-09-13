@@ -19,8 +19,7 @@ interface SolutionControlsProps {
   onSpeedChange: (speed: AnimationSpeed) => void;
 }
 
-const buttonClass =
-  "flex items-center gap-1.5 rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 transition-colors hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-slate-800";
+const buttonClass = "cc-btn-secondary px-3 py-2";
 
 export function SolutionControls({
   moves,
@@ -78,12 +77,12 @@ export function SolutionControls({
       </button>
 
       {status === "playing" ? (
-        <button type="button" className={buttonClass} onClick={onPause} aria-label="Pause playback">
+        <button type="button" className="cc-btn-primary px-3 py-2" onClick={onPause} aria-label="Pause playback">
           <Pause size={16} />
           Pause
         </button>
       ) : (
-        <button type="button" className={buttonClass} onClick={onPlay} disabled={!canGoNext} aria-label="Play solution">
+        <button type="button" className="cc-btn-primary px-3 py-2" onClick={onPlay} disabled={!canGoNext} aria-label="Play solution">
           <Play size={16} />
           Play
         </button>
@@ -109,7 +108,7 @@ export function SolutionControls({
         <select
           value={speed}
           onChange={(e) => onSpeedChange(e.target.value as AnimationSpeed)}
-          className="rounded-md border border-slate-700 bg-slate-800 px-2 py-1 text-sm text-slate-100"
+          className="cc-input w-auto px-2 py-1"
         >
           <option value="slow">Slow</option>
           <option value="normal">Normal</option>

@@ -11,7 +11,7 @@ function SolvingIndicator() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="flex items-center gap-2 rounded-md border border-slate-700 bg-slate-800/60 p-3 text-sm text-slate-300">
+    <div className="cc-surface flex items-center gap-2 p-3 text-sm text-slate-300">
       <span className="h-2 w-2 animate-pulse rounded-full bg-sky-400" aria-hidden="true" />
       <span aria-live="polite">{SOLVING_LABELS[labelIndex]}</span>
     </div>

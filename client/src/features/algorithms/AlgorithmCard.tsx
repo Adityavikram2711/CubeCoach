@@ -11,7 +11,7 @@ export function AlgorithmCard({ algorithmCase }: { algorithmCase: AlgorithmCaseD
   return (
     <Link
       to={`/algorithms/${algorithmCase.caseId}`}
-      className="flex flex-col gap-2 rounded-lg border border-slate-800 bg-slate-900 p-4 transition-colors hover:border-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+      className="cc-card-interactive flex flex-col gap-2 p-4"
     >
       <div className="flex items-center justify-between gap-2">
         <span className="font-semibold text-slate-100">{algorithmCase.name}</span>
@@ -21,7 +21,9 @@ export function AlgorithmCard({ algorithmCase }: { algorithmCase: AlgorithmCaseD
       </div>
       {algorithmCase.category && <span className="text-xs uppercase tracking-wide text-slate-500">{algorithmCase.category}</span>}
       <p className="line-clamp-2 text-sm text-slate-400">{algorithmCase.recognition}</p>
-      <code className="mt-1 truncate rounded bg-slate-950 px-2 py-1 font-mono text-xs text-sky-300">{algorithmCase.algorithm}</code>
+      <code className="cc-surface mt-1 truncate px-2 py-1 font-mono text-xs" style={{ color: "var(--accent)" }}>
+        {algorithmCase.algorithm}
+      </code>
     </Link>
   );
 }

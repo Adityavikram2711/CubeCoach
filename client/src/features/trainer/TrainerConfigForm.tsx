@@ -122,7 +122,7 @@ export function TrainerConfigForm({ config, onChange, onStart, availableCount, i
       </section>
 
       {availableCount === 0 ? (
-        <p className="rounded-md border border-slate-800 bg-slate-900 p-3 text-sm text-slate-400">
+        <p className="cc-surface p-3 text-sm text-slate-400">
           No cases match this selection yet.{" "}
           {config.filter === "favorites" && "You haven't favorited any cases for these types yet -- browse the "}
           {config.filter !== "favorites" && "Try a different filter, or browse the "}
@@ -139,7 +139,7 @@ export function TrainerConfigForm({ config, onChange, onStart, availableCount, i
         type="button"
         onClick={onStart}
         disabled={availableCount === 0}
-        className="self-start rounded-md bg-sky-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50"
+        className="cc-btn-primary self-start px-5 py-2.5"
       >
         Start Training
       </button>

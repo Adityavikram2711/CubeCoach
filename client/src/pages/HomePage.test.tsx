@@ -12,7 +12,9 @@ describe("HomePage", () => {
 
   it("links to the solver and algorithm library", () => {
     render(<HomePage />, { wrapper: MemoryRouter });
-    expect(screen.getByRole("link", { name: /solve a cube/i })).toHaveAttribute("href", "/solve");
-    expect(screen.getByRole("link", { name: /algorithm library/i })).toHaveAttribute("href", "/algorithms");
+    // Exact-match names: the hero's own CTAs, not the feature cards further down the
+    // page (e.g. "Verified Algorithm Library"), which also link to these routes.
+    expect(screen.getByRole("link", { name: /^solve a cube$/i })).toHaveAttribute("href", "/solve");
+    expect(screen.getByRole("link", { name: /^algorithm library$/i })).toHaveAttribute("href", "/algorithms");
   });
 });

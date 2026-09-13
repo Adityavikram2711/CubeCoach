@@ -1,9 +1,17 @@
+import { BookOpen, Layers, Timer as TimerIcon, Wand2 } from "lucide-react";
 import { useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useUserAlgorithmsList } from "../features/algorithms/useUserAlgorithm.js";
 import { useAuthStore } from "../store/authStore.js";
 
 const TOTAL_ALGORITHMS = 57 + 21 + 24; // 57 OLL + 21 PLL + 24 F2L, per the Phase 7 verified dataset
+
+const QUICK_ACTIONS = [
+  { to: "/solve", label: "Solve a Cube", icon: Wand2 },
+  { to: "/algorithms", label: "Algorithm Library", icon: BookOpen },
+  { to: "/trainer", label: "Trainer", icon: Layers },
+  { to: "/timer", label: "Speed Timer", icon: TimerIcon },
+];
 
 export function ProfilePage() {
   const navigate = useNavigate();
@@ -19,7 +27,7 @@ export function ProfilePage() {
   if (status === "loading" || status === "idle") {
     return (
       <main className="mx-auto max-w-2xl p-6">
-        <p className="text-sm text-slate-400">Loading profile...</p>
+        <p className="cc-status-line">Loading profile...</p>
       </main>
     );
   }
@@ -41,7 +49,7 @@ export function ProfilePage() {
     .slice(0, 5);
 
   return (
-    <main className="mx-auto flex max-w-2xl flex-col gap-6 p-6">
+    <main className="cc-page mx-auto flex max-w-2xl flex-col gap-6 p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-100">{user.username}</h1>
@@ -51,14 +59,26 @@ export function ProfilePage() {
         <button
           type="button"
           onClick={logout}
-          className="rounded-md border border-slate-700 px-3 py-1.5 text-sm font-medium text-slate-200 hover:border-slate-500"
+          className="cc-btn-secondary px-3 py-1.5"
         >
           Log Out
         </button>
       </div>
 
+      <div>
+        <span className="cc-label">Quick Actions</span>
+        <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {QUICK_ACTIONS.map((action) => (
+            <Link key={action.to} to={action.to} className="cc-card-interactive flex flex-col items-center gap-2 px-3 py-4 text-center">
+              <action.icon size={18} style={{ color: "var(--accent)" }} />
+              <span className="text-xs font-medium text-slate-200">{action.label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {isLoading ? (
-        <p className="text-sm text-slate-400">Loading your algorithm progress...</p>
+        <p className="cc-status-line">Loading your algorithm progress...</p>
       ) : (
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -77,7 +97,7 @@ export function ProfilePage() {
             ) : (
               <ul className="mt-2 flex flex-col gap-2">
                 {recentlyCustomized.map((r) => (
-                  <li key={r._id} className="rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm">
+                  <li key={r._id} className="cc-surface px-3 py-2 text-sm">
                     <span className="font-mono font-semibold text-sky-300">{r.algorithmId}</span>
                     {r.preferredAlgorithm && <span className="ml-2 text-slate-300">{r.preferredAlgorithm}</span>}
                   </li>
@@ -93,7 +113,7 @@ export function ProfilePage() {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900 p-4 text-center">
+    <div className="cc-card p-4 text-center">
       <div className="text-xl font-bold text-slate-100">{value}</div>
       <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
     </div>

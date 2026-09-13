@@ -8,10 +8,8 @@ import { computeSolveStats } from "../features/timer/solveStats.js";
 import { useSolveHistory } from "../features/timer/useSolveHistory.js";
 import { useTimerEngine } from "../features/timer/useTimerEngine.js";
 
-const buttonClass =
-  "rounded-md border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-semibold text-slate-100 transition-colors hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:cursor-not-allowed disabled:opacity-40";
-const primaryButtonClass =
-  "rounded-md bg-sky-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50";
+const buttonClass = "cc-btn-secondary px-4 py-2";
+const primaryButtonClass = "cc-btn-primary px-5 py-2.5";
 
 export function TimerPage() {
   const { state, displayNow, beginInspection, startSolveNow, stop, cancel, setPenalty, newScramble } = useTimerEngine();
@@ -47,7 +45,7 @@ export function TimerPage() {
   };
 
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-6 p-6">
+    <main className="cc-page mx-auto flex max-w-3xl flex-col gap-6 p-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-100">Speed Timer</h1>
         <p className="mt-1 text-sm text-slate-400">
@@ -57,7 +55,7 @@ export function TimerPage() {
 
       <ScrambleDisplay scramble={state.scramble} />
 
-      <div className="flex flex-col items-center gap-4 rounded-lg border border-slate-800 bg-slate-900 p-8">
+      <div className="flex flex-col items-center gap-4 cc-card p-8">
         <TimerDisplay state={state} displayNow={displayNow} />
 
         <div className="flex flex-wrap justify-center gap-2">
@@ -110,7 +108,7 @@ export function TimerPage() {
 
       <div>
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Statistics</h2>
-        {isLoading ? <p className="text-sm text-slate-400">Loading your statistics...</p> : <StatisticsPanel stats={stats} />}
+        {isLoading ? <p className="cc-status-line">Loading your statistics...</p> : <StatisticsPanel stats={stats} />}
       </div>
 
       {/* min-w-0: direct child of a flex column defaults to min-width:auto (never
@@ -119,7 +117,7 @@ export function TimerPage() {
           viewport on narrow screens instead of scrolling internally. */}
       <div className="min-w-0">
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Solve History</h2>
-        {isLoading ? <p className="text-sm text-slate-400">Loading your solves...</p> : <SolveHistory solves={solves} onDelete={removeSolve} />}
+        {isLoading ? <p className="cc-status-line">Loading your solves...</p> : <SolveHistory solves={solves} onDelete={removeSolve} />}
       </div>
     </main>
   );

@@ -1,15 +1,20 @@
 import { createSolvedCube, generateScramble, type FaceletCube, type Move } from "@cube-coach/cube-engine";
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import { CubeInputView } from "../features/solver/CubeInputView.js";
 import { Cube3D, type AnimationSpeed, type Cube3DHandle } from "../three/Cube3D.js";
 import { CubeControls } from "../three/CubeControls.js";
 
 type ViewMode = "cube" | "net";
 
-const tabClass = (active: boolean) =>
-  `rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-    active ? "bg-slate-800 text-slate-50" : "text-slate-400 hover:text-slate-200"
-  }`;
+function tabStyle(active: boolean): { className: string; style?: CSSProperties } {
+  if (active) {
+    return {
+      className: "rounded-md px-4 py-1.5 text-sm font-semibold text-slate-950 transition-all",
+      style: { backgroundImage: "linear-gradient(135deg, var(--accent), var(--accent-hover))" },
+    };
+  }
+  return { className: "rounded-md px-4 py-1.5 text-sm font-medium text-slate-400 transition-colors hover:text-slate-100" };
+}
 
 export function SolvePage() {
   const [view, setView] = useState<ViewMode>("net");
@@ -30,16 +35,18 @@ export function SolvePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col bg-slate-950 text-slate-50">
-      <header className="border-b border-slate-800 px-6 py-4">
-        <h1 className="text-2xl font-bold tracking-tight">Solve a Cube</h1>
-        <p className="text-sm text-slate-400">Enter your cube configuration, or explore moves in 3D.</p>
+    <main className="cc-page flex min-h-[calc(100vh-57px)] flex-col text-slate-50">
+      <header className="border-b px-6 py-5" style={{ borderColor: "var(--border)" }}>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-100">Solve a Cube</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+          Enter your cube configuration, or explore moves in 3D.
+        </p>
 
-        <div className="mt-3 inline-flex gap-1 rounded-lg border border-slate-800 bg-slate-900 p-1">
-          <button type="button" className={tabClass(view === "net")} onClick={() => setView("net")}>
+        <div className="mt-4 inline-flex gap-1 rounded-lg border p-1" style={{ borderColor: "var(--border)", backgroundColor: "var(--surface-solid)" }}>
+          <button type="button" {...tabStyle(view === "net")} onClick={() => setView("net")}>
             Net View
           </button>
-          <button type="button" className={tabClass(view === "cube")} onClick={() => setView("cube")}>
+          <button type="button" {...tabStyle(view === "cube")} onClick={() => setView("cube")}>
             Cube View
           </button>
         </div>
@@ -50,7 +57,7 @@ export function SolvePage() {
 
         {view === "cube" && (
           <div className="flex flex-1 flex-col gap-4 lg:flex-row">
-            <div className="min-h-[420px] flex-1 overflow-hidden rounded-lg border border-slate-800 bg-slate-900">
+            <div className="cc-card min-h-[420px] flex-1 overflow-hidden">
               <Cube3D ref={cubeRef} cube={cube} animationSpeed={speed} onCubeChange={setCube} />
             </div>
 

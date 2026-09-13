@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
+import { Footer } from "./components/Footer.js";
 import { NavBar } from "./components/NavBar.js";
 import { AlgorithmDetailPage } from "./pages/AlgorithmDetailPage.js";
 import { AlgorithmsPage } from "./pages/AlgorithmsPage.js";
@@ -23,17 +24,20 @@ export function App() {
   return (
     <>
       <NavBar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/solve" element={<SolvePage />} />
-        <Route path="/algorithms" element={<AlgorithmsPage />} />
-        <Route path="/algorithms/:id" element={<AlgorithmDetailPage />} />
-        <Route path="/trainer" element={<TrainerPage />} />
-        <Route path="/timer" element={<TimerPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-      </Routes>
+      <div className="flex-1">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/solve" element={<SolvePage />} />
+          <Route path="/algorithms" element={<AlgorithmsPage />} />
+          <Route path="/algorithms/:id" element={<AlgorithmDetailPage />} />
+          <Route path="/trainer" element={<TrainerPage />} />
+          <Route path="/timer" element={<TimerPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Routes>
+      </div>
+      <Footer />
     </>
   );
 }

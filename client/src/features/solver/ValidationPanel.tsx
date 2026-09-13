@@ -20,8 +20,7 @@ interface ValidationPanelProps {
   onSolve: () => void;
 }
 
-const buttonClass =
-  "rounded-md border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-100 transition-colors hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-slate-800";
+const buttonClass = "cc-btn-secondary px-3 py-1.5";
 
 export function ValidationPanel({
   filledCount,
@@ -68,7 +67,7 @@ export function ValidationPanel({
         <button type="button" className={buttonClass} onClick={onValidate}>
           Validate Cube
         </button>
-        <button type="button" className={buttonClass} onClick={onSolve} disabled={validation?.valid !== true}>
+        <button type="button" className="cc-btn-primary px-3 py-1.5" onClick={onSolve} disabled={validation?.valid !== true}>
           Solve Cube
         </button>
       </div>

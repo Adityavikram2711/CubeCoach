@@ -42,7 +42,7 @@ export function SolutionViewer({ originalCube, result }: SolutionViewerProps) {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900" style={{ height: 280 }}>
+      <div className="overflow-hidden cc-card" style={{ height: 280 }}>
         <Cube3D
           ref={cubeRef}
           cube={player.currentCube}

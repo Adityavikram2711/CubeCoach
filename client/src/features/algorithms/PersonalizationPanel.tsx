@@ -34,7 +34,7 @@ export function PersonalizationPanel({ algorithmId, officialAlgorithm }: Persona
   }, [record?.notes, notesDirty]);
 
   if (isLoading) {
-    return <p className="text-sm text-slate-400">Loading your personalization...</p>;
+    return <p className="cc-status-line">Loading your personalization...</p>;
   }
 
   const alternatives = record?.personalAlternatives ?? [];
@@ -59,7 +59,7 @@ export function PersonalizationPanel({ algorithmId, officialAlgorithm }: Persona
   };
 
   return (
-    <section className="flex flex-col gap-5 rounded-lg border border-amber-900/50 bg-slate-900 p-4" aria-label="Your personalization">
+    <section className="cc-card flex flex-col gap-5 p-4" style={{ borderColor: "rgba(180, 83, 9, 0.4)" }} aria-label="Your personalization">
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -126,12 +126,12 @@ export function PersonalizationPanel({ algorithmId, officialAlgorithm }: Persona
             onChange={(e) => setNewAlternative(e.target.value)}
             placeholder="Add another algorithm you use..."
             aria-label="Add a personal alternative algorithm"
-            className="flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-1.5 font-mono text-sm text-slate-100"
+            className="cc-input flex-1 px-3 py-1.5 font-mono"
           />
           <button
             type="button"
             onClick={handleAddAlternative}
-            className="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:border-slate-500"
+            className="cc-btn-secondary px-3 py-1.5"
           >
             Add
           </button>
@@ -156,14 +156,14 @@ export function PersonalizationPanel({ algorithmId, officialAlgorithm }: Persona
           }}
           rows={3}
           placeholder="e.g. Use left-hand grip, still slow on the regrip..."
-          className="mt-1 w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
+          className="cc-input mt-1"
         />
         {notesDirty && (
           <button
             type="button"
             onClick={handleSaveNotes}
             disabled={upsert.isPending}
-            className="mt-2 rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold text-slate-950 hover:bg-sky-400 disabled:opacity-60"
+            className="mt-2 cc-btn-primary px-3 py-1.5"
           >
             Save Notes
           </button>

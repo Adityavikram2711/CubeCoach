@@ -16,7 +16,7 @@ export function ProgressSummaryView({ casesByType, progress }: ProgressSummaryVi
         const cases = casesByType[type] ?? [];
         const summary = getProgressSummary(cases, progress);
         return (
-          <div key={type} className="rounded-lg border border-slate-800 bg-slate-900 p-3">
+          <div key={type} className="cc-card p-3">
             <h3 className="text-sm font-semibold text-slate-200">{type}</h3>
             <p className="mt-1 text-sm text-slate-400">
               {summary.learned} / {summary.total} learned

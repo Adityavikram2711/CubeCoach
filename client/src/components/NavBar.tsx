@@ -1,48 +1,68 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/authStore.js";
+
+const NAV_LINKS = [
+  { to: "/solve", label: "Solve" },
+  { to: "/algorithms", label: "Algorithms" },
+  { to: "/trainer", label: "Trainer" },
+  { to: "/timer", label: "Timer" },
+];
 
 export function NavBar() {
   const status = useAuthStore((s) => s.status);
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
+  const location = useLocation();
+
+  const linkClass = (to: string) =>
+    `relative px-1 py-1 text-sm font-medium transition-colors ${
+      location.pathname === to ? "text-slate-50" : "text-slate-300 hover:text-slate-50"
+    }`;
 
   return (
-    <nav className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-slate-800 bg-slate-950 px-4 py-2.5">
-      <Link to="/" className="font-bold text-slate-100">
+    <nav
+      className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b px-4 py-3 backdrop-blur-md"
+      style={{ borderColor: "var(--border)", backgroundColor: "rgba(8, 11, 20, 0.85)" }}
+    >
+      <Link to="/" className="cc-heading-gradient text-lg font-bold tracking-tight">
         CubeCoach
       </Link>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-        <Link to="/solve" className="text-slate-300 hover:text-slate-100">
-          Solve
-        </Link>
-        <Link to="/algorithms" className="text-slate-300 hover:text-slate-100">
-          Algorithms
-        </Link>
-        <Link to="/trainer" className="text-slate-300 hover:text-slate-100">
-          Trainer
-        </Link>
-        <Link to="/timer" className="text-slate-300 hover:text-slate-100">
-          Timer
-        </Link>
-        {status === "authenticated" && user ? (
-          <>
-            <Link to="/profile" className="text-slate-300 hover:text-slate-100">
-              {user.username}
+      <div className="flex flex-wrap items-center gap-y-2 text-sm">
+        <div className="flex flex-wrap items-center gap-x-5">
+          {NAV_LINKS.map((link) => (
+            <Link key={link.to} to={link.to} className={linkClass(link.to)}>
+              {link.label}
+              {location.pathname === link.to && (
+                <span className="absolute -bottom-3 left-0 right-0 h-0.5 rounded-full" style={{ backgroundColor: "var(--accent)" }} />
+              )}
             </Link>
-            <button type="button" onClick={logout} className="text-slate-400 hover:text-slate-100">
-              Log Out
-            </button>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="text-slate-300 hover:text-slate-100">
-              Log In
-            </Link>
-            <Link to="/register" className="rounded-md bg-sky-500 px-3 py-1 font-semibold text-slate-950 hover:bg-sky-400">
-              Register
-            </Link>
-          </>
-        )}
+          ))}
+        </div>
+
+        <div className="ml-5 flex flex-wrap items-center gap-x-4 border-l pl-5" style={{ borderColor: "var(--border)" }}>
+          {status === "authenticated" && user ? (
+            <>
+              <Link to="/profile" className={linkClass("/profile")}>
+                {user.username}
+                {location.pathname === "/profile" && (
+                  <span className="absolute -bottom-3 left-0 right-0 h-0.5 rounded-full" style={{ backgroundColor: "var(--accent)" }} />
+                )}
+              </Link>
+              <button type="button" onClick={logout} className="text-slate-400 transition-colors hover:text-slate-100">
+                Log Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className={linkClass("/login")}>
+                Log In
+              </Link>
+              <Link to="/register" className="cc-btn-primary px-3 py-1.5 text-xs">
+                Register
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );

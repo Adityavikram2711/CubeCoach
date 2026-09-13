@@ -12,6 +12,7 @@ export default {
           blue: "#0051ba",
           green: "#009e60",
         },
+        accentPurple: "#8b5cf6",
       },
     },
   },

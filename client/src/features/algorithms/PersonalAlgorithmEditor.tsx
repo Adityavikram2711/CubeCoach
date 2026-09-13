@@ -73,7 +73,7 @@ export function PersonalAlgorithmEditor({ officialAlgorithm, currentValue, onSav
           <button
             type="button"
             onClick={startEditing}
-            className="self-start rounded-md border border-slate-700 px-3 py-1.5 text-sm font-medium text-slate-200 hover:border-slate-500"
+            className="cc-btn-secondary self-start px-3 py-1.5"
           >
             {currentValue ? "Edit" : "Add a personal algorithm"}
           </button>
@@ -82,7 +82,7 @@ export function PersonalAlgorithmEditor({ officialAlgorithm, currentValue, onSav
               type="button"
               onClick={handleReset}
               disabled={isSaving}
-              className="self-start rounded-md border border-slate-700 px-3 py-1.5 text-sm font-medium text-slate-400 hover:border-slate-500 disabled:opacity-60"
+              className="cc-btn-secondary self-start px-3 py-1.5"
             >
               Reset to official
             </button>
@@ -102,7 +102,7 @@ export function PersonalAlgorithmEditor({ officialAlgorithm, currentValue, onSav
         type="text"
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
-        className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
+        className="cc-input font-mono"
         aria-invalid={error !== null}
         aria-describedby={error ? "personal-algorithm-error" : undefined}
       />
@@ -116,11 +116,11 @@ export function PersonalAlgorithmEditor({ officialAlgorithm, currentValue, onSav
           type="button"
           onClick={handleSave}
           disabled={isSaving}
-          className="rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold text-slate-950 hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-60"
+          className="cc-btn-primary px-3 py-1.5"
         >
           {isSaving ? "Saving..." : "Save"}
         </button>
-        <button type="button" onClick={handleCancel} className="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-300 hover:border-slate-500">
+        <button type="button" onClick={handleCancel} className="cc-btn-secondary px-3 py-1.5">
           Cancel
         </button>
       </div>

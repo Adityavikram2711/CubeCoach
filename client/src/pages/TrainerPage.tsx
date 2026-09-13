@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { useMemo, useReducer, useState } from "react";
 import type { AlgorithmType } from "../api/algorithms.js";
 import { CaseRecallView } from "../features/trainer/CaseRecallView.js";
@@ -52,16 +53,18 @@ export function TrainerPage() {
 
   if (casesLoading || progressLoading) {
     return (
-      <main className="mx-auto max-w-2xl p-6">
-        <p className="text-sm text-slate-400">Loading trainer...</p>
+      <main className="cc-page mx-auto max-w-2xl p-6">
+        <p className="cc-status-line">
+          <Loader2 size={14} className="cc-spin" /> Loading trainer...
+        </p>
       </main>
     );
   }
 
   if (casesError) {
     return (
-      <main className="mx-auto max-w-2xl p-6">
-        <p className="text-sm text-rose-400">Failed to load algorithm data for the trainer.</p>
+      <main className="cc-page mx-auto max-w-2xl p-6">
+        <p className="cc-status-error">Failed to load algorithm data for the trainer.</p>
       </main>
     );
   }
@@ -133,7 +136,7 @@ function TrainerSession({ config, pool, casesByType, casesById, progress, onReco
 
   if (state.phase === "complete") {
     return (
-      <main className="mx-auto max-w-2xl p-6">
+      <main className="cc-page mx-auto max-w-2xl p-6">
         <SessionSummaryView state={state} casesById={casesById} onPracticeAgain={onPracticeAgain} onTrainWeakCases={onTrainWeakCases} onBackToTrainer={onExit} />
       </main>
     );
@@ -142,7 +145,7 @@ function TrainerSession({ config, pool, casesByType, casesById, progress, onReco
   const currentProgress = progress[state.current.caseId];
 
   return (
-    <main className="mx-auto max-w-2xl p-6">
+    <main className="cc-page mx-auto max-w-2xl p-6">
       <div className="mb-4 flex items-center justify-between text-sm text-slate-400">
         <span>
           {config.types.join(" + ")} &middot; {config.mode === "recognition" ? "Recognition" : "Recall"} &middot; Case {state.index + 1}

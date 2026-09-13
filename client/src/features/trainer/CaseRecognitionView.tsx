@@ -17,10 +17,12 @@ export function CaseRecognitionView({ state, progress, onAnswer, onNext }: CaseR
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900" style={{ height: 260 }}>
+      <span className="cc-label">Case</span>
+      <div className="overflow-hidden cc-card" style={{ height: 260 }}>
         <Cube3D cube={state.current.scrambledState} />
       </div>
 
+      <span className="cc-label -mb-2">{isFeedback ? "Feedback" : "Answer"}</span>
       <h2 className="text-center text-lg font-semibold text-slate-100">What case is this?</h2>
 
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2" role="group" aria-label="Case choices">
@@ -58,7 +60,7 @@ export function CaseRecognitionView({ state, progress, onAnswer, onNext }: CaseR
             {state.lastCorrect ? "Correct" : "Incorrect"}
           </div>
 
-          <div className="rounded-md border border-slate-800 bg-slate-900 p-3">
+          <div className="cc-surface p-3">
             <h3 className="font-semibold text-slate-100">{state.current.name}</h3>
             <p className="mt-1 text-sm text-slate-400">{state.current.recognition}</p>
             <div className="mt-2">
@@ -78,7 +80,7 @@ export function CaseRecognitionView({ state, progress, onAnswer, onNext }: CaseR
           <button
             type="button"
             onClick={onNext}
-            className="self-start rounded-md bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-sky-400"
+            className="self-start cc-btn-primary"
           >
             Next Case
           </button>

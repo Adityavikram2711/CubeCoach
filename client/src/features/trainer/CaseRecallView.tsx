@@ -17,15 +17,17 @@ export function CaseRecallView({ state, progress, onReveal, onSelfAssess, onNext
   if (state.phase === "presenting") {
     return (
       <div className="flex flex-col gap-4">
-        <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-900" style={{ height: 260 }}>
+        <span className="cc-label">Case</span>
+        <div className="overflow-hidden cc-card" style={{ height: 260 }}>
           <Cube3D cube={state.current.scrambledState} />
         </div>
+        <span className="cc-label -mb-2">Think</span>
         <h2 className="text-center text-lg font-semibold text-slate-100">What algorithm would you use?</h2>
         <p className="text-center text-sm text-slate-400">Take a moment to recall it, then reveal the answer.</p>
         <button
           type="button"
           onClick={onReveal}
-          className="self-center rounded-md bg-sky-500 px-5 py-2.5 text-sm font-semibold text-slate-950 hover:bg-sky-400"
+          className="cc-btn-primary self-center px-5 py-2.5"
         >
           Reveal Answer
         </button>
@@ -37,6 +39,7 @@ export function CaseRecallView({ state, progress, onReveal, onSelfAssess, onNext
 
   return (
     <div className="flex flex-col gap-4">
+      <span className="cc-label">Answer</span>
       <div>
         <span className="text-xs font-semibold uppercase tracking-wide text-sky-400">Official CubeCoach Algorithm (Verified)</span>
         <code className="mt-1 block rounded bg-slate-950 px-2 py-1 font-mono text-sm text-sky-200">{state.current.algorithm}</code>
@@ -76,6 +79,7 @@ export function CaseRecallView({ state, progress, onReveal, onSelfAssess, onNext
 
       {state.phase === "feedback" && (
         <div className="flex flex-col gap-3">
+          <span className="cc-label">Feedback</span>
           <div
             aria-live="polite"
             className={`flex items-center gap-2 rounded-md border p-3 text-sm font-semibold ${
@@ -88,7 +92,7 @@ export function CaseRecallView({ state, progress, onReveal, onSelfAssess, onNext
           <button
             type="button"
             onClick={onNext}
-            className="self-start rounded-md bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-sky-400"
+            className="self-start cc-btn-primary"
           >
             Next Case
           </button>
