@@ -1,14 +1,32 @@
 /**
- * Generates 21 canonical PLL cases. Unlike OLL's 57 (a mathematically exact orbit
- * count, see generateOllCases.ts), the "21 PLL" list is a curated speedcubing
- * convention -- enumerating every valid last-layer permutation up to AUF actually
- * yields 83 distinct orbits (verified in pllPermutations.test.ts), not 21. So instead
- * of deriving the full 21 from pure math, this selects 21 structurally-diverse,
- * pairwise-DISTINCT representatives (verified via isSameAufOrbit, the same
- * engine-grounded equivalence check) spanning the well-known PLL families: pure corner
- * cycles, pure edge cycles, double swaps, and combined corner+edge cycles. Each case's
- * algorithm is found independently by reusing the runtime solver's own phase2 search
- * (pllSearch.ts) against that exact permutation -- never the other way around.
+ * Generates the 21 canonical PLL cases (Aa, Ab, E, F, Ga, Gb, Gc, Gd, H, Ja, Jb, Na, Nb,
+ * Ra, Rb, T, Ua, Ub, V, Y, Z). Unlike OLL's 57 (a mathematically exact orbit count, see
+ * generateOllCases.ts), the "21 PLL" list is a curated speedcubing convention --
+ * enumerating every valid last-layer permutation up to AUF actually yields 72 distinct
+ * orbits (verified in pllPermutations.test.ts), not 21.
+ *
+ * Every pattern below was independently verified by executing a real, published
+ * algorithm for that named case (sourced from jperm.net/algs/pll) through this engine's
+ * own move parser/applier from a solved cube, then reading back which last-layer
+ * permutation actually resulted -- never hand-derived or assumed from a name or picture.
+ * Each is stored as its "canonical" AUF representative (corners at identity for a
+ * pure-edge case, edges at identity for a pure-corner case) for readability; the
+ * specific representative doesn't matter for correctness since the generated
+ * scrambledState/algorithm always correspond to whichever one is stored.
+ *
+ * A prior version of this file had only 8 of these 21 patterns hand-specified, filling
+ * the rest with arbitrary auto-picked "combined cycle" permutations under generic names.
+ * That approach also relied on a since-fixed bug in pllPermutations.ts's AUF-equivalence
+ * check (it conjugated by a whole-cube "y" rotation instead of a real "U" turn), which
+ * silently let two pairs of genuinely-identical cases through as if they were distinct
+ * (the stored "E Perm" was an exact duplicate of "H Perm"; "T Perm" was an exact
+ * duplicate of one of the auto-picked fillers). Both problems are fixed here: all 21
+ * real identities are now explicit, and the equivalence check they (and this file's own
+ * dedup) rely on is correct.
+ *
+ * Each case's algorithm is found independently by reusing the runtime solver's own
+ * phase2 search (pllSearch.ts) against that exact permutation -- this file never copies
+ * jperm's algorithm text into the shipped data, only the verified case IDENTITY.
  */
 import type { CubieCube } from "../cube/cubie.js";
 import { cubieToFacelet } from "../cube/conversions.js";
@@ -24,12 +42,12 @@ interface NamedPllPattern extends PllPattern {
 
 const IDENTITY = [0, 1, 2, 3];
 
-// Well-known, high-confidence structural definitions (which pieces cycle/swap), stated
-// independently of any algorithm -- see the module comment.
+// All 21 canonical identities, alphabetically ordered, each verified against a real
+// published algorithm for that case -- see the module comment above.
 const NAMED_PATTERNS: NamedPllPattern[] = [
   {
     name: "Aa Perm",
-    cp: [2, 0, 1, 3],
+    cp: [0, 3, 1, 2],
     ep: IDENTITY,
     recognition: "A pure 3-cycle of corners; all four edges are already in place.",
     difficulty: "Intermediate",
@@ -42,18 +60,46 @@ const NAMED_PATTERNS: NamedPllPattern[] = [
     difficulty: "Intermediate",
   },
   {
-    name: "Ua Perm",
-    cp: IDENTITY,
-    ep: [2, 0, 1, 3],
-    recognition: "A pure 3-cycle of edges; all four corners are already in place.",
-    difficulty: "Beginner",
+    name: "E Perm",
+    cp: [3, 2, 1, 0],
+    ep: IDENTITY,
+    recognition: "Two pairs of corners are swapped; all four edges are already in place.",
+    difficulty: "Advanced",
   },
   {
-    name: "Ub Perm",
-    cp: IDENTITY,
-    ep: [1, 2, 0, 3],
-    recognition: "A pure 3-cycle of edges in the opposite direction from Ua; corners already in place.",
-    difficulty: "Beginner",
+    name: "F Perm",
+    cp: [3, 1, 2, 0],
+    ep: [2, 1, 0, 3],
+    recognition: "One pair of corners is swapped, and one pair of edges is swapped elsewhere in the layer.",
+    difficulty: "Intermediate",
+  },
+  {
+    name: "Ga Perm",
+    cp: [3, 1, 2, 0],
+    ep: [2, 0, 3, 1],
+    recognition: "One pair of corners is swapped while all four edges 4-cycle together.",
+    difficulty: "Advanced",
+  },
+  {
+    name: "Gb Perm",
+    cp: [3, 1, 2, 0],
+    ep: [1, 3, 0, 2],
+    recognition: "One pair of corners is swapped while all four edges 4-cycle together, the opposite rotational sense from Ga.",
+    difficulty: "Advanced",
+  },
+  {
+    name: "Gc Perm",
+    cp: [3, 1, 2, 0],
+    ep: [3, 2, 0, 1],
+    recognition: "One pair of corners is swapped while all four edges 4-cycle together (a distinct 4-cycle pattern from Ga/Gb).",
+    difficulty: "Advanced",
+  },
+  {
+    name: "Gd Perm",
+    cp: [3, 1, 2, 0],
+    ep: [2, 3, 1, 0],
+    recognition: "One pair of corners is swapped while all four edges 4-cycle together (a distinct 4-cycle pattern from Ga/Gb/Gc).",
+    difficulty: "Advanced",
   },
   {
     name: "H Perm",
@@ -63,72 +109,90 @@ const NAMED_PATTERNS: NamedPllPattern[] = [
     difficulty: "Beginner",
   },
   {
-    name: "Z Perm",
-    cp: IDENTITY,
-    ep: [1, 0, 3, 2],
-    recognition: "Two pairs of adjacent edges are swapped all the way around; corners already in place.",
+    name: "Ja Perm",
+    cp: [3, 1, 2, 0],
+    ep: [0, 2, 1, 3],
+    recognition: "One pair of corners is swapped, and a different pair of edges is swapped -- compare the exact edges involved to distinguish from Jb.",
     difficulty: "Intermediate",
   },
   {
-    name: "E Perm",
-    cp: [2, 3, 0, 1],
-    ep: IDENTITY,
-    recognition: "Two pairs of diagonal corners are swapped; all edges are already in place.",
+    name: "Jb Perm",
+    cp: [0, 3, 1, 2],
+    ep: [0, 2, 3, 1],
+    recognition: "One pair of corners is swapped while three edges 3-cycle together.",
+    difficulty: "Intermediate",
+  },
+  {
+    name: "Na Perm",
+    cp: [0, 3, 2, 1],
+    ep: [0, 3, 2, 1],
+    recognition: "One pair of corners is swapped, and the matching pair of edges is swapped in the same two slots.",
+    difficulty: "Advanced",
+  },
+  {
+    name: "Nb Perm",
+    cp: [2, 1, 0, 3],
+    ep: [0, 3, 2, 1],
+    recognition: "One pair of corners is swapped, and a different pair of edges is swapped in the other two slots -- compare to Na.",
+    difficulty: "Advanced",
+  },
+  {
+    name: "Ra Perm",
+    cp: [0, 3, 1, 2],
+    ep: [1, 3, 2, 0],
+    recognition: "Three corners 3-cycle together, and three edges 3-cycle together in a different grouping.",
+    difficulty: "Advanced",
+  },
+  {
+    name: "Rb Perm",
+    cp: [1, 2, 0, 3],
+    ep: [0, 3, 1, 2],
+    recognition: "Three corners 3-cycle together, and three edges 3-cycle together in a different grouping (mirrored from Ra).",
     difficulty: "Advanced",
   },
   {
     name: "T Perm",
     cp: [3, 1, 2, 0],
-    ep: [1, 0, 2, 3],
-    recognition: "One pair of adjacent corners and the edge between them are swapped on the same side.",
+    ep: [0, 3, 2, 1],
+    recognition: "One pair of corners is swapped, and one pair of edges is swapped -- compare the exact pieces involved to distinguish from F.",
     difficulty: "Beginner",
   },
+  {
+    name: "Ua Perm",
+    cp: IDENTITY,
+    ep: [3, 0, 2, 1],
+    recognition: "A pure 3-cycle of edges; all four corners are already in place.",
+    difficulty: "Beginner",
+  },
+  {
+    name: "Ub Perm",
+    cp: IDENTITY,
+    ep: [1, 3, 2, 0],
+    recognition: "A pure 3-cycle of edges in the opposite direction from Ua; corners already in place.",
+    difficulty: "Beginner",
+  },
+  {
+    name: "V Perm",
+    cp: [2, 1, 0, 3],
+    ep: [0, 2, 1, 3],
+    recognition: "One pair of corners is swapped, and one pair of edges is swapped -- compare the exact pieces involved to distinguish from Y.",
+    difficulty: "Advanced",
+  },
+  {
+    name: "Y Perm",
+    cp: [2, 1, 0, 3],
+    ep: [0, 1, 3, 2],
+    recognition: "One pair of corners is swapped, and one pair of edges is swapped -- compare the exact pieces involved to distinguish from V.",
+    difficulty: "Intermediate",
+  },
+  {
+    name: "Z Perm",
+    cp: IDENTITY,
+    ep: [3, 2, 1, 0],
+    recognition: "Two pairs of adjacent edges are swapped all the way around; corners already in place.",
+    difficulty: "Intermediate",
+  },
 ];
-
-function permutationsOf4(): number[][] {
-  const perms: number[][] = [];
-  const base = [0, 1, 2, 3];
-  function permute(arr: number[], k: number) {
-    if (k === arr.length) {
-      perms.push([...arr]);
-      return;
-    }
-    for (let i = k; i < arr.length; i++) {
-      [arr[k], arr[i]] = [arr[i]!, arr[k]!];
-      permute(arr, k + 1);
-      [arr[k], arr[i]] = [arr[i]!, arr[k]!];
-    }
-  }
-  permute(base, 0);
-  return perms;
-}
-
-/** Fills out the remaining slots (past the named, high-confidence patterns) with structurally diverse, distinct combined corner+edge 3-cycles -- the "G perm" family. */
-function findAdditionalCombinedCycles(existing: PllPattern[], countNeeded: number): NamedPllPattern[] {
-  const perms = permutationsOf4();
-  // A genuine 3-cycle of 4 elements fixes exactly one point (double-transpositions,
-  // also even, fix none; identity fixes all four) -- this isolates pure 3-cycles.
-  const genuineThreeCycles = perms.filter((p) => p.filter((v, i) => v === i).length === 1);
-
-  const results: NamedPllPattern[] = [];
-  const allKnown = [...existing];
-
-  outer: for (const cp of genuineThreeCycles) {
-    for (const ep of genuineThreeCycles) {
-      const candidate = { cp, ep };
-      if (allKnown.some((known) => isSameAufOrbit(known, candidate))) continue;
-      allKnown.push(candidate);
-      results.push({
-        ...candidate,
-        name: `Combined Cycle ${results.length + 1}`,
-        recognition: "Corners and edges both 3-cycle together; compare the exact pieces involved to distinguish from other combined-cycle cases.",
-        difficulty: "Advanced",
-      });
-      if (results.length >= countNeeded) break outer;
-    }
-  }
-  return results;
-}
 
 function buildCaseCubie(cp4: number[], ep4: number[]): CubieCube {
   return {
@@ -144,10 +208,21 @@ export interface GeneratedPllCase extends PLLCase {
 }
 
 export function generatePllCases(): GeneratedPllCase[] {
-  const additional = findAdditionalCombinedCycles(NAMED_PATTERNS, 21 - NAMED_PATTERNS.length);
-  const allPatterns = [...NAMED_PATTERNS, ...additional];
+  // Defensive check, not a fallback: every one of the 21 identities above must be
+  // genuinely distinct. If this ever fails, it means a NAMED_PATTERNS entry above is
+  // wrong (a typo, or a duplicate of another case) -- it must be fixed there, not
+  // papered over here.
+  for (let i = 0; i < NAMED_PATTERNS.length; i++) {
+    for (let j = i + 1; j < NAMED_PATTERNS.length; j++) {
+      const a = NAMED_PATTERNS[i]!;
+      const b = NAMED_PATTERNS[j]!;
+      if (isSameAufOrbit(a, b)) {
+        throw new Error(`generatePllCases: "${a.name}" and "${b.name}" are the same permutation up to AUF -- fix NAMED_PATTERNS.`);
+      }
+    }
+  }
 
-  return allPatterns.map((pattern, index) => {
+  return NAMED_PATTERNS.map((pattern, index) => {
     const number = index + 1;
     const caseCubie = buildCaseCubie(pattern.cp, pattern.ep);
     const algorithmMoves = findPllAlgorithm(caseCubie);

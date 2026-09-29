@@ -3,13 +3,24 @@
  * of the 4 last-layer pieces, restricted to overall-even so the state is physically
  * reachable), deduplicated by AUF-equivalence.
  *
- * AUF-equivalence for a *permutation* means "the same physical cube, viewed after a
- * whole-cube y rotation." Hand-deriving that as an abstract permutation-composition
- * formula turned out to be error-prone to get the direction right (see git history --
- * two plausible conjugation directions, both wrong on first try). Instead this just
- * *is* the real operation: apply an actual "y" move via the facelet engine and re-read
- * cp/ep with the center-aware faceletToCubie -- correct by construction, reusing
- * already-proven conversions instead of a second, independently-fallible derivation.
+ * AUF-equivalence for a *permutation* means "the same physical cube, after an Adjust-U-
+ * Face turn" -- i.e. a real top-layer "U" turn, which is what AUF literally is. This is
+ * a real, physical operation: apply an actual "U" move via the facelet engine and re-
+ * read cp/ep with the center-aware faceletToCubie -- correct by construction, reusing
+ * already-proven conversions instead of a hand-derived permutation-composition formula.
+ *
+ * An earlier version of this function conjugated by a whole-cube "y" rotation instead of
+ * "U", reasoning that with the D-layer artificially forced solved (see below), the two
+ * would coincide. They don't: reading cp/ep back is defined relative to CURRENT face
+ * centers, and "y" moves those centers too (the artificial D-layer's centers are still
+ * home-colored, so a real "y" applied to that manufactured state doesn't reproduce the
+ * relabeling a genuine AUF turn would). The bug was invisible for simple cases (pure
+ * 3-cycles) but silently broke AUF-equivalence for others: applying "y" to a solved cube
+ * even read back as cp/ep identity, when a real rotation should show one. That let
+ * distinct PLL cases (e.g. E and H, and separately T and one of the "combined cycle"
+ * cases) get treated as duplicates or missed as duplicates during generation. "U" -- a
+ * real top-layer turn, leaving the manufactured D-layer's centers untouched -- doesn't
+ * have this problem and is what AUF actually means.
  */
 import { applyMove } from "../moves/apply.js";
 import { cubieToFacelet, faceletToCubie } from "../cube/conversions.js";
@@ -19,7 +30,7 @@ export function conjugateByU(cp4: readonly number[], ep4: readonly number[]): { 
   const cubie = createSolvedCubieCube();
   cubie.cp = [...cp4, 4, 5, 6, 7];
   cubie.ep = [...ep4, 4, 5, 6, 7, 8, 9, 10, 11];
-  const rotated = faceletToCubie(applyMove(cubieToFacelet(cubie), "y"));
+  const rotated = faceletToCubie(applyMove(cubieToFacelet(cubie), "U"));
   return { cp: rotated.cp.slice(0, 4), ep: rotated.ep.slice(0, 4) };
 }
 
